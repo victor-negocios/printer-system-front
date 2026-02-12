@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Printer System</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="icon-light.png" id="favicon">
+    <script src="script.js"></script>
+</head>
+
+<body>
+    <div>
+        <label class="switch">
+            <input type="checkbox" id="theme-toggle">
+            <span class="slider"></span>
+        </label>
+    </div>
+
+    <div><a href="https://www.2bfv.eb.mil.br/index.php/noticias/uncategorised/historico-cieng"><img src="brasao.png" alt="brasao-cieng" class="brasao"></a></div>
+
+    <div class="container">
+        <h1>🖨 Sistema de Impressões</h1>
+
+        <form id="form">
+            <input type="hidden" id="orderId">
+
+            <label>
+                Nome do Solicitante
+                <input type="text" id="nome" placeholder="Ex: SD Aurycan" required>
+            </label>
+
+            <label>
+                Nome da Impressão
+                <input type="text" id="titulo" placeholder="Ex: Nome Modelo" required>
+            </label>
+
+            <label>
+                Descrição
+                <input type="text" id="descricao" placeholder="Ex: Suporte para placa de vídeo RTX5070Ti" required>
+            </label>
+
+            <label>
+                Data Pedido
+                <input type="date" id="dataPedido">
+            </label>
+
+            <label>
+                Prazo
+                <input type="date" id="dataEntrega">
+            </label>
+
+
+            <button type="submit" id="submit">Salvar Pedido</button>
+        </form>
+
+        <div class="card">
+            <u>
+                <h2>Pedidos Registrados</h2>
+            </u>
+            
+            <div class="controles">
+                <label>Filtrar:</label>
+                <select id="filtroData" onchange="carregarPedidos()">
+                    <option value="desc">↑ Data</option>
+                    <option value="asc">↓ Datas</option>
+                </select>
+            </div>
+            <ul id="orderList"></ul>
+        </div>
+    </div>
+</body>
+
+</html>

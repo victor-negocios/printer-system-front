@@ -1,0 +1,209 @@
+/* Variáveis de Cores - Facilita a manutenção */
+:root {
+    --bg-body: #fefefebc;
+    --bg-container: #ffffff;
+    --text-main: #333333;
+    --text-titles: #2c3e50;
+    --border-color: #dddddd;
+    --active-text-box: #1a4ace;
+    --active-text-box-shadow: rgba(52, 130, 219, 0.3);
+    --input-bg: #ffffff;
+    --bg-button: #2778ae;
+    --bg-button-hover: #216491;
+    --bg-beirada: #3498db;
+    --editar-cor: #fdc500;
+    --editar-pad: 7px;
+    --effect: blur(2.5px);
+}
+
+/* Cores do Modo Escuro */
+body.dark-mode {
+    --bg-body: #161616;
+    --bg-container: #1e1e1e;
+    --text-main: #e0e0e0;
+    --text-titles: #ffffff;
+    --border-color: #444444;
+    --input-bg: #2d2d2d;
+    --active-text-box: #ce1a1a;
+    --active-text-box-shadow: rgba(219, 52, 52, 0.3);
+    --bg-button: #ae2727;
+    --bg-button-hover: #c73333;
+    --bg-beirada: #ae2727;
+    --editar-cor: #ff5500;
+    --effect: brightness(40%) blur(1.5px);
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-body);
+    color: var(--text-main);
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    transition: background 0.3s, color 0.3s;
+    margin: 0;
+    min-height: 100vh;
+    backdrop-filter: var(--effect);
+}
+
+
+.container {
+    background: var(--bg-container);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 700px;
+    transition: background 0.5s;
+}
+
+.brasao {
+    height: 85px;
+    position: absolute;
+    /* Fixa na tela */
+    top: 16px;
+    /* Distância do topo */
+    right: 20px;
+    /* Distância da esquerda */
+    display: inline-block;
+    transition: height 0.5s ease-out;
+}
+
+.brasao:hover {
+    height: 150px;
+    cursor: pointer;
+}
+
+h1,
+h2 {
+    text-align: center;
+    color: var(--text-titles);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+label {
+    display: flex;
+    flex-direction: column;
+    font-weight: bold;
+    font-size: 0.9rem;
+    gap: 5px;
+    color: var(--text-main);
+}
+
+input,
+select {
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 1rem;
+    background-color: var(--input-bg);
+    color: var(--text-main);
+}
+
+input:focus,
+select:focus {
+    outline: none;
+    border-color: var(--active-text-box);
+    box-shadow: 0 0 5px var(--active-text-box-shadow);
+}
+
+button {
+    background-color: var(--bg-button);
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: var(--bg-button-hover);
+}
+
+.card {
+    margin-top: 30px;
+    border-top: 2px solid var(--border-color);
+    padding-top: 20px;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    background: var(--input-bg);
+    margin-bottom: 10px;
+    padding: 8px;
+    border-radius: 6px;
+    border-left: 5px solid var(--bg-beirada);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--text-main);
+}
+
+/* --- ESTILO DO SWITCH (ALINHADO À ESQUERDA) --- */
+.switch {
+    font-size: 17px;
+    position: absolute;
+    /* Fixa na tela */
+    top: 20px;
+    /* Distância do topo */
+    left: 20px;
+    /* Distância da esquerda */
+    display: inline-block;
+    width: 3.5em;
+    height: 2em;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 30px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 1.4em;
+    width: 1.4em;
+    border-radius: 50%;
+    left: 0.3em;
+    bottom: 0.3em;
+    background-color: white;
+    transition: .4s;
+}
+
+.switch input:checked+.slider {
+    background-color: #ae2727;
+}
+
+.switch input:checked+.slider:before {
+    transform: translateX(1.5em);
+}
+
+.editar:hover{
+     padding:var(--editar-pad);
+}
