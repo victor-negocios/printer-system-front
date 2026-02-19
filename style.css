@@ -1,7 +1,8 @@
-/* Variáveis de Cores - Facilita a manutenção */
+/* Light Mode- Normal */
 :root {
+    font-family: 'Courier New', Courier, monospace;
     --bg-body: #fefefebc;
-    --bg-container: #ffffff;
+    --bg-container: #f7f7f7; 
     --text-main: #333333;
     --text-titles: #2c3e50;
     --border-color: #dddddd;
@@ -13,10 +14,11 @@
     --bg-beirada: #3498db;
     --editar-cor: #fdc500;
     --editar-pad: 7px;
-    --effect: blur(2.5px);
+    --modal-text: #333333;
+    scrollbar-width: none;
 }
 
-/* Cores do Modo Escuro */
+/* Dark Mode */
 body.dark-mode {
     --bg-body: #161616;
     --bg-container: #1e1e1e;
@@ -30,7 +32,7 @@ body.dark-mode {
     --bg-button-hover: #c73333;
     --bg-beirada: #ae2727;
     --editar-cor: #ff5500;
-    --effect: brightness(40%) blur(1.5px);
+    --modal-text: #333333;
 }
 
 body {
@@ -44,6 +46,7 @@ body {
     margin: 0;
     min-height: 100vh;
     backdrop-filter: var(--effect);
+    
 }
 
 
@@ -59,12 +62,9 @@ body {
 
 .brasao {
     height: 85px;
-    position: absolute;
-    /* Fixa na tela */
+    position: fixed;
     top: 16px;
-    /* Distância do topo */
     right: 20px;
-    /* Distância da esquerda */
     display: inline-block;
     transition: height 0.5s ease-out;
 }
@@ -155,7 +155,7 @@ li {
 /* --- ESTILO DO SWITCH (ALINHADO À ESQUERDA) --- */
 .switch {
     font-size: 17px;
-    position: absolute;
+    position: fixed;
     /* Fixa na tela */
     top: 20px;
     /* Distância do topo */
@@ -207,3 +207,28 @@ li {
 .editar:hover{
      padding:var(--editar-pad);
 }
+
+
+
+/* Classe comum para todos os botões da lista */
+.btn-acao {
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    color: white;
+    transition: opacity 0.2s;
+}
+
+.btn-acao:hover {
+    opacity: 0.8;
+}
+
+/* Cores específicas */
+.btn-info { background-color: #3498db; font-size: 18px; }
+.btn-edit { background-color: #2ecc71; font-size: 16px; }
+.btn-del  { background-color: #e74c3c; font-size: 14px; }

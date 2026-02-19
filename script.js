@@ -6,29 +6,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('form');
     const submitBtn = document.getElementById('submit');
 
-
     // --- MODO DARK ---
     if (localStorage.getItem('theme') === 'dark') {
         document.body.classList.add('dark-mode');
         if (themeToggle) themeToggle.checked = true;
-        favicon.setAttribute('href', 'icon-dark.png'); // Define o ícone ao carregar a página
+        favicon.setAttribute('href', 'icon-dark.png');
     }
 
-    if (themeToggle) {
-        themeToggle.addEventListener('change', () => {
-            const isDarkMode = document.body.classList.toggle('dark-mode');
-            localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
-
-            // Alterna entre o ícone dark e o original
-            const novoIcone = isDarkMode ? 'icon-dark.png' : 'icon-light.png';
-            favicon.setAttribute('href', novoIcone);
-        });
-    }
-
+    themeToggle?.addEventListener('change', () => {
+        const isDarkMode = document.body.classList.toggle('dark-mode');
+        localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+        favicon.setAttribute('href', isDarkMode ? 'icon-dark.png' : 'icon-light.png');
+    });
 
     carregarPedidos();
 
-    // --- SALVAR / ATUALIZAR (POST / PUT) ---
+    // --- SALVAR / ATUALIZAR ---
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         const id = document.getElementById('orderId').value;
@@ -37,17 +30,18 @@ document.addEventListener('DOMContentLoaded', () => {
             nomeSolicitante: document.getElementById('nome').value,
             titulo: document.getElementById('titulo').value,
             descricao: document.getElementById('descricao').value,
-            dataPedido: document.getElementById('dataPedido').value ? new Date(document.getElementById('dataPedido').value).toISOString() : new Date().toISOString(),
-            prazo: document.getElementById('dataEntrega').value ? new Date(document.getElementById('dataEntrega').value).toISOString() : null,
-            dataEntrega: null
+            dataPedido: document.getElementById('dataPedido').value
+                ? new Date(document.getElementById('dataPedido').value).toISOString()
+                : new Date().toISOString(),
+            dataEntrega: document.getElementById('dataEntrega').value
+                ? new Date(document.getElementById('dataEntrega').value).toISOString()
+                : null
         };
 
         try {
             const url = id ? `${BASE_URL}/update/${id}` : `${BASE_URL}/addorder`;
-            const metodo = id ? 'PUT' : 'POST';
-
             const response = await fetch(url, {
-                method: metodo,
+                method: id ? 'PUT' : 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(dados)
             });
@@ -56,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert(id ? "Pedido atualizado!" : "Pedido enviado!");
                 form.reset();
                 document.getElementById('orderId').value = '';
-                if (submitBtn) submitBtn.textContent = "Enviar Pedido";
+                if (submitBtn) submitBtn.textContent = "Salvar Pedido";
                 carregarPedidos();
             }
         } catch (error) {
@@ -65,70 +59,90 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// --- FUNÇÕES GLOBAIS (Devem estar fora do DOMContentLoaded para o onclick funcionar) ---
+// --- FUNÇÕES GLOBAIS ---
 
 async function carregarPedidos() {
     const orderList = document.getElementById('orderList');
-    // 1. Captura o valor do filtro (se não existir, o padrão é 'desc')
     const filtroData = document.getElementById('filtroData')?.value || 'desc';
 
     try {
         const response = await fetch(`${BASE_URL}/`);
         let pedidos = await response.json();
 
-        // 2. Lógica de Ordenação por Data
+        // Ordenação por Data
         pedidos.sort((a, b) => {
-            const dataA = new Date(a.dataPedido);
-            const dataB = new Date(b.dataPedido);
-
-            // Ordem Crescente (Antigos primeiro) ou Decrescente (Recentes primeiro)
-            return filtroData === 'asc' ? dataA - dataB : dataB - dataA;
+            const da = new Date(a.dataPedido);
+            const db = new Date(b.dataPedido);
+            return filtroData === 'asc' ? da - db : db - da;
         });
 
-        // 3. Limpa a lista antes de renderizar
         orderList.innerHTML = '';
 
-        // 4. Renderiza os itens ordenados
         pedidos.forEach(p => {
-            const dataBrPD = p.dataPedido ? new Date(p.dataPedido).toLocaleDateString('pt-BR') : '---';
-            const dataBrPR = p.prazo ? new Date(p.prazo).toLocaleDateString('pt-BR') : '---';
-
-            // Escapa aspas para evitar erro no onclick do HTML
             const pedidoJSON = JSON.stringify(p).replace(/'/g, "\\'");
-
             const li = document.createElement('li');
             li.innerHTML = `
-                <span><strong>${p.nomeSolicitante}</strong> - ${p.titulo} (${dataBrPD}) - (${dataBrPR})</span>
-                <div>
-                    <button onclick='mostrarDesc(${p.id})'style="background:#e74c3c; color:white; border:none; padding:5px; border-radius:4px; cursor:pointer; margin-left:5px">Detalhes</button>
-                    <button onclick='prepararEdicao(${pedidoJSON})' style="background:var(--editar-cor); color:white; border:none; padding:5px; border-radius:4px; cursor:pointer" class='editar'>Editar</button>
-                    <button onclick="deletarPedido(${p.id})" style="background:#e74c3c; color:white; border:none; padding:5px; border-radius:4px; cursor:pointer; margin-left:3px">X</button>
+                <span><strong>${p.nomeSolicitante}</strong> - ${p.titulo}</span>
+                <div style="display: flex; gap: 5px;">
+                    <button onclick='mostrarDesc(${pedidoJSON})' class="btn-acao btn-info">i</button>
+                    <button onclick='prepararEdicao(${pedidoJSON})' class="btn-acao btn-edit">✎</button>
+                    <button onclick="deletarPedido(${p.id})" class="btn-acao btn-del">✖</button>
                 </div>
             `;
             orderList.appendChild(li);
         });
-    } catch (error) {
-        console.error('Erro ao listar:', error);
-    }
+    } catch (error) { console.error('Erro ao listar:', error); }
 }
 
+function mostrarDesc(p) {
+    const modal = document.getElementById('modalDesc');
+    const conteudo = document.getElementById('modalConteudo');
+    const btnDownload = document.getElementById('btnDownload');
+    const containerDownload = document.getElementById('containerDownload');
 
-function prepararEdicao(pedido) {
-    document.getElementById('orderId').value = pedido.id;
-    document.getElementById('nome').value = pedido.nomeSolicitante;
-    document.getElementById('titulo').value = pedido.titulo;
-    document.getElementById('descricao').value = pedido.descricao;
+    // Identifica links de arquivos na descrição
+    const regexLink = /(https?:\/\/[^\s]+\.(stl|glb|3mf|png|jpg|jpeg))/i;
+    const match = p.descricao.match(regexLink);
+    const textoSemLink = p.descricao.replace(regexLink, '').trim();
 
-    const submitBtn = document.getElementById("submit");
-    if (submitBtn) submitBtn.textContent = "Atualizar Pedido";
+    conteudo.innerHTML = `
+        <h3 style="margin-top:0">${p.titulo}</h3>
+        <p><strong>Solicitante:</strong> ${p.nomeSolicitante}</p>
+        <p><strong>Descrição:</strong> ${textoSemLink || 'Sem observações adicionais.'}</p>
+        <p><strong>Status:</strong> ${match ? '✅ Arquivo Disponível' : '⏳ Aguardando Modelo'}</p>
+        <p style="display:inline;"><small><strong>Pedido em: </strong>${p.dataPedido ? new Date(p.dataPedido).toLocaleDateString('pt-BR') : '---'}</small></p>
+        <p style="display:inline;"><small><strong>Prazo: </strong>${p.dataEntrega ? new Date(p.dataEntrega).toLocaleDateString('pt-BR') : '---'}</small></p>
+        `;
 
-    if (pedido.dataPedido) {
-        document.getElementById('dataPedido').value = pedido.dataPedido.split('T')[0];
-    }
-    if (pedido.prazo) {
-        document.getElementById('dataEntrega').value = pedido.prazo.split('T')[0];
-    }
+    // // Lógica para mostrar botão de download se houver link
+    // if (match && btnDownload && containerDownload) {
+    //     btnDownload.href = match[0];
+    //     containerDownload.style.display = "block";
+    // } else if (containerDownload) {
+    //     containerDownload.style.display = "none";
+    // }
 
+    modal.style.display = "block";
+}
+
+function fecharModal() {
+    document.getElementById('modalDesc').style.display = "none";
+}
+
+window.onclick = (e) => {
+    if (e.target == document.getElementById('modalDesc')) fecharModal();
+};
+
+function prepararEdicao(p) {
+    document.getElementById('orderId').value = p.id;
+    document.getElementById('nome').value = p.nomeSolicitante;
+    document.getElementById('titulo').value = p.titulo;
+    document.getElementById('descricao').value = p.descricao;
+
+    if (p.dataPedido) document.getElementById('dataPedido').value = p.dataPedido.split('T')[0];
+    if (p.dataEntrega) document.getElementById('dataEntrega').value = p.dataEntrega.split('T')[0];
+
+    document.getElementById('submit').textContent = "Atualizar Pedido";
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -137,11 +151,5 @@ async function deletarPedido(id) {
     try {
         await fetch(`${BASE_URL}/delete/${id}`, { method: 'DELETE' });
         carregarPedidos();
-    } catch (error) {
-        alert('Erro ao deletar');
-    }
-}
-
-function mostrarDesc(id){
-    
+    } catch (error) { alert('Erro ao deletar'); }
 }

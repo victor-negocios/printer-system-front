@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -17,7 +18,8 @@
         </label>
     </div>
 
-    <div><a href="https://www.2bfv.eb.mil.br/index.php/noticias/uncategorised/historico-cieng"><img src="brasao.png" alt="brasao-cieng" class="brasao"></a></div>
+    <div><a href="https://www.2bfv.eb.mil.br/index.php/noticias/uncategorised/historico-cieng" target="_blank"><img src="cieng-pi.png"
+                alt="brasao-cieng" class="brasao"></a></div>
 
     <div class="container">
         <h1>🖨 Sistema de Impressões</h1>
@@ -50,7 +52,6 @@
                 <input type="date" id="dataEntrega">
             </label>
 
-
             <button type="submit" id="submit">Salvar Pedido</button>
         </form>
 
@@ -58,15 +59,26 @@
             <u>
                 <h2>Pedidos Registrados</h2>
             </u>
-            
+
             <div class="controles">
                 <label>Filtrar:</label>
                 <select id="filtroData" onchange="carregarPedidos()">
-                    <option value="desc">↑ Data</option>
-                    <option value="asc">↓ Datas</option>
+                    <option value="desc">⇧ Data</option>
+                    <option value="asc">⇩ Data</option>
                 </select>
             </div>
             <ul id="orderList"></ul>
+        </div>
+    </div>
+
+    <!-- JANELA DE DETALHES (MODAL) -->
+    <div id="modalDesc" class="modal"
+        style="display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.8); color: var(--modal-text)">
+        <div
+            style="background:var(--bg-card, #fff); margin:10% auto; padding:20px; border-radius:8px; width:80%; max-width:500px; position:relative;">
+            <span onclick="fecharModal()"
+                style="position:absolute; right:15px; top:10px; cursor:pointer; font-size:24px;">&times;</span>
+            <div id="modalConteudo"></div>
         </div>
     </div>
 </body>
